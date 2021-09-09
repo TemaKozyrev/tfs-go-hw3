@@ -22,16 +22,20 @@ const (
 )
 
 func PeriodTS(period CandlePeriod, ts time.Time) (time.Time, error) {
+	var m int
+
 	switch period {
 	case CandlePeriod1m:
-		return time.Date(ts.Year(), ts.Month(), ts.Day(), ts.Hour(), ts.Minute(), 0, 0, ts.Location()), nil
+		m = ts.Minute()
 	case CandlePeriod2m:
-		return time.Date(ts.Year(), ts.Month(), ts.Day(), ts.Hour(), ((ts.Minute()-1)/2)*2, 0, 0, ts.Location()), nil
+		m = ((ts.Minute() - 1) / 2) * 2
 	case CandlePeriod10m:
-		return time.Date(ts.Year(), ts.Month(), ts.Day(), ts.Hour(), ((ts.Minute()-1)/10)*10, 0, 0, ts.Location()), nil
+		m = ((ts.Minute() - 1) / 10) * 10
 	default:
 		return time.Time{}, ErrUnknownPeriod
 	}
+
+	return time.Date(ts.Year(), ts.Month(), ts.Day(), ts.Hour(), m, 0, 0, ts.Location()), nil
 }
 
 type Candle struct {
