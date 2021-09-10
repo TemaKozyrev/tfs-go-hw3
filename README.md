@@ -77,20 +77,16 @@ const (
 )
 
 func PeriodTS(period CandlePeriod, ts time.Time) (time.Time, error) {
-    var m int
-    
     switch period {
     case CandlePeriod1m:
-        m = ts.Minute()
+        return ts.Truncate(time.Minute), nil
     case CandlePeriod2m:
-        m = ((ts.Minute() - 1) / 2) * 2
+        return ts.Truncate(2 * time.Minute), nil
     case CandlePeriod10m:
-        m = ((ts.Minute() - 1) / 10) * 10
+        return ts.Truncate(10 * time.Minute), nil
     default:
         return time.Time{}, ErrUnknownPeriod
     }
-    
-    return time.Date(ts.Year(), ts.Month(), ts.Day(), ts.Hour(), m, 0, 0, ts.Location()), nil
 }
 ```
 
